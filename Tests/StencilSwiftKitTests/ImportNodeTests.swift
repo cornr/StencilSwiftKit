@@ -62,7 +62,7 @@ class ImportNodeTests: XCTestCase {
         let output = try node.render(context)
 
         XCTAssertEqual(output, "")
-        XCTAssertEqual(loader.loadtemplateCalledWithName!, "Macros.stencil")
+        XCTAssertEqual(loader.loadtemplateCalledWithName, "Macros.stencil")
     }
 
     func testRenderLoaderFail() {
@@ -74,8 +74,8 @@ class ImportNodeTests: XCTestCase {
         let someLoaderError = TemplateDoesNotExist(templateNames: ["Macros.stencil"])
         loader.loadTemplateError = someLoaderError
 
-        XCTAssertThrowsError(try node.render(context), "") { (error) in
-            guard let _ = error as? TemplateDoesNotExist else {
+        XCTAssertThrowsError(try node.render(context), "") { error in
+            guard error as? TemplateDoesNotExist != nil else {
                 XCTFail(error.localizedDescription)
                 return
             }
@@ -89,8 +89,8 @@ class ImportNodeTests: XCTestCase {
         let context = Context(environment: environment)
         let node = ImportNode(templateName: Variable("a"))
 
-        XCTAssertThrowsError(try node.render(context), "") { (error) in
-            guard let _ = error as? TemplateSyntaxError else {
+        XCTAssertThrowsError(try node.render(context), "") { error in
+            guard error as? TemplateSyntaxError != nil else {
                 XCTFail(error.localizedDescription)
                 return
             }
