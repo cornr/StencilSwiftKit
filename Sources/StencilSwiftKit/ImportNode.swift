@@ -6,7 +6,7 @@
 
 import Stencil
 
-class ImportNode : NodeType {
+class ImportNode: NodeType {
     var token: Token?
 
     let templateName: Variable
