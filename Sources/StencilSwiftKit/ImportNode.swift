@@ -7,32 +7,32 @@
 import Stencil
 
 class ImportNode: NodeType {
-    var token: Token?
+  var token: Token?
 
-    let templateName: Variable
+  let templateName: Variable
 
-    class func parse(_ parser: TokenParser, token: Token) throws -> NodeType {
-        let bits = token.components()
+  class func parse(_ parser: TokenParser, token: Token) throws -> NodeType {
+    let bits = token.components()
 
-        guard bits.count == 2 else {
-            throw TemplateSyntaxError("'import' tag requires one argument, the template file to be imported.")
-        }
-
-        return ImportNode(templateName: Variable(bits[1]))
+    guard bits.count == 2 else {
+      throw TemplateSyntaxError("'import' tag requires one argument, the template file to be imported.")
     }
 
-    init(templateName: Variable) {
-        self.templateName = templateName
+    return ImportNode(templateName: Variable(bits[1]))
+  }
+
+  init(templateName: Variable) {
+    self.templateName = templateName
+  }
+
+  func render(_ context: Context) throws -> String {
+    guard let templateName = try self.templateName.resolve(context) as? String else {
+      throw TemplateSyntaxError("'\(self.templateName)' could not be resolved as a string")
     }
 
-    func render(_ context: Context) throws -> String {
-        guard let templateName = try self.templateName.resolve(context) as? String else {
-            throw TemplateSyntaxError("'\(self.templateName)' could not be resolved as a string")
-        }
+    let template = try context.environment.loadTemplate(name: templateName)
 
-        let template = try context.environment.loadTemplate(name: templateName)
-
-        _ = try template.render(context.flatten())
-        return ""
-    }
+    _ = try template.render(context.flatten())
+    return ""
+  }
 }
