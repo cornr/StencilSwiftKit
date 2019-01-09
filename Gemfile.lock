@@ -102,7 +102,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cocoapods (~> 1.6.beta)
+  cocoapods (~> 1.6.0.beta.2)
   octokit (~> 4.13)
   rake (~> 12.3)
   rubocop (~> 0.62)
